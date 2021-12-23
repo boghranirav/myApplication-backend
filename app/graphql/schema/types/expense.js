@@ -1,4 +1,3 @@
-const { buildSchema } = require("graphql");
 
 module.exports = `
     type Category{

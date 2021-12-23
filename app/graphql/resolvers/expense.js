@@ -3,6 +3,7 @@ const { QueryTypes } = require("sequelize");
 const init_models = require("../../models/init-models");
 const models = init_models(sequelize, Sequelize);
 const dbFunction = require("../../common/db-function");
+const dbSpFunction = require("../../common/db-sp-function");
 const validator = require("validator");
 
 module.exports = {
@@ -23,30 +24,25 @@ module.exports = {
         error.code = 422;
         throw error;
       }
-
-      // await dbFunction.create(models.tblCategory, {
-      //   user_id: "1",
-      //   category_type: createCategory.categoryType.trim(),
-      //   category: createCategory.category.trim(),
-      // });
-
-      const spOutput= await sequelize.query('CALL AddUpdateCategory (:categoryId, :userId, :categoryType, :categoryValue, :spMode)', 
-      {replacements: { categoryId:'0', userId: '1', categoryType: createCategory.categoryType.trim(), categoryValue:createCategory.category.trim(), spMode:'ADD' }})
       
+      const map1 = new Map();
+  
+      map1.set("categoryId","0");
+      map1.set("userId", '1');
+      map1.set("categoryType", createCategory.categoryType.trim());
+      map1.set("categoryValue",createCategory.category.trim());
+      map1.set("spMode",'ADD');
 
-      // const val = await sequelize.query(
-      //   `select category_id as "categoryId", category_type as "categoryType", category from tbl_category where category_id=${spOutput[0][0].categoryid} `,
-      //   { type: QueryTypes.SELECT }
-      // );
+      const spOutput=await dbSpFunction.saveData("AddUpdateCategory",map1)
+
+      console.log(spOutput);
 
       const val = await sequelize.query(
         `select category_id as "categoryId", category_type as "categoryType", category from tbl_category where category_id=${spOutput[0][0].categoryid} `,
         { type: QueryTypes.SELECT }
       );
-      console.log(val[0]);
       return val[0];
     },
-
     updateCategory: async function ({ updateCategory }, req) {
       const errors = [];
 
