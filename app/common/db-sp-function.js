@@ -10,7 +10,6 @@ const saveData=async (spName,inputParam)=>{
     let spKeyValue="{";
 
     if(inputParam !== null && (typeof inputParam === 'object')){
-
         inputParam.forEach((value,key)=>{
             spKey+=`:${key.trim()}, `
             spKeyValue+=`"${key.trim()}": "${value.trim()}", `          
@@ -20,17 +19,16 @@ const saveData=async (spName,inputParam)=>{
     spKey=spKey.replaceLast(",","");
     spKeyValue=spKeyValue.replaceLast(",","");
     spKeyValue+="}"
+
+    let spOutput;
     try{
-    const obj1=JSON.parse(spKeyValue);
-   
-    const spOutput= await sequelize.query(`CALL ${spName} (${spKey})`, {replacements: {...obj1} })
-    console.log(spOutput);
+    const replacementObj=JSON.parse(spKeyValue);
+    spOutput= await sequelize.query(`CALL ${spName} (${spKey})`, {replacements: {...replacementObj} });
     }catch(error)
     {
         console.log(error.message)
     }
-
-    //return spOutput;
+    return spOutput[0][0];
 }
 
 module.exports = {

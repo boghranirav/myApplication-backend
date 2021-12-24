@@ -5,40 +5,40 @@ const models = init_models(sequelize, Sequelize);
 const dbFunction = require("../../common/db-function");
 const dbSpFunction = require("../../common/db-sp-function");
 const validator = require("validator");
+const RESPONSE_MSG = require("../../common/status-code/index");
+
 
 module.exports = {
 
   createNewCategory: async function ({ createCategory }, req) {
       const errors = [];
       if (validator.isEmpty(createCategory.categoryType.trim())) {
-        errors.push({ message: "Category Type name empty!" });
+        errors.push(RESPONSE_MSG.EXPENSE.EMPTY.CATEGORY_TYPE );
       }
   
       if (validator.isEmpty(createCategory.category.trim())) {
-        errors.push({ message: "Category name empty!" });
+        errors.push(RESPONSE_MSG.EXPENSE.EMPTY.CATEGORY);
       }
 
       if (errors.length > 0) {
-        const error = new Error("Invalid.");
-        error.data = errors;
-        error.code = 422;
+        const error = new Error(RESPONSE_MSG.EXPENSE.EMPTY.MESSAGE + errors);
+        error.data = errors.message;
+        error.code = RESPONSE_MSG.EXPENSE.EMPTY.CODE;
         throw error;
       }
       
-      const map1 = new Map();
+      const category = new Map();
   
-      map1.set("categoryId","0");
-      map1.set("userId", '1');
-      map1.set("categoryType", createCategory.categoryType.trim());
-      map1.set("categoryValue",createCategory.category.trim());
-      map1.set("spMode",'ADD');
+      category.set("categoryId","0");
+      category.set("userId", '1');
+      category.set("categoryType", createCategory.categoryType.trim());
+      category.set("categoryValue",createCategory.category.trim());
+      category.set("spMode",'ADD');
 
-      const spOutput=await dbSpFunction.saveData("AddUpdateCategory",map1)
-
-      console.log(spOutput);
+      const spOutput=await dbSpFunction.saveData("AddUpdateCategory",category)
 
       const val = await sequelize.query(
-        `select category_id as "categoryId", category_type as "categoryType", category from tbl_category where category_id=${spOutput[0][0].categoryid} `,
+        `select category_id as "categoryId", category_type as "categoryType", category from tbl_category where category_id=${spOutput.categoryid} `,
         { type: QueryTypes.SELECT }
       );
       return val[0];
@@ -47,33 +47,33 @@ module.exports = {
       const errors = [];
 
       if (validator.isEmpty(updateCategory.categoryId.trim()) || updateCategory.categoryId.trim()=='0') {
-        errors.push({ message: "Category Id empty!" });
+        errors.push(errors.push(RESPONSE_MSG.EXPENSE.EMPTY.CATEGORY_ID));
       }
 
       if (validator.isEmpty(updateCategory.categoryType.trim())) {
-        errors.push({ message: "Category Type name empty!" });
+        errors.push(RESPONSE_MSG.EXPENSE.EMPTY.CATEGORY_TYPE );
       }
   
       if (validator.isEmpty(updateCategory.category.trim())) {
-        errors.push({ message: "Category name empty!" });
+        errors.push(RESPONSE_MSG.EXPENSE.EMPTY.CATEGORY );
       }
 
       if (errors.length > 0) {
-        const error = new Error("Invalid.");
+        const error = new Error(RESPONSE_MSG.EXPENSE.EMPTY.MESSAGE);
         error.data = errors;
         error.code = 422;
         throw error;
       }
 
-      const spOutput= await sequelize.query('CALL AddUpdateCategory (:categoryId, :userId, :categoryType, :categoryValue, :spMode)', 
-      {replacements: { categoryId:updateCategory.categoryId.trim(), userId: '1', categoryType: updateCategory.categoryType.trim(), categoryValue:updateCategory.category.trim(), spMode:'UPDATE' }})
+      const category = new Map();
+  
+      category.set("categoryId",updateCategory.categoryId.trim());
+      category.set("userId", '1');
+      category.set("categoryType", updateCategory.categoryType.trim());
+      category.set("categoryValue",updateCategory.category.trim());
+      category.set("spMode",'UPDATE');
       
-      console.log("spOutput",spOutput)
-
-      // const val = await sequelize.query(
-      //   `select category_id as "categoryId", category_type as "categoryType", category from tbl_category where category_id=${spOutput[0][0].categoryid} `,
-      //   { type: QueryTypes.SELECT }
-      // );
+      await dbSpFunction.saveData("AddUpdateCategory",category)
 
       const val = await sequelize.query(
         `select category_id as "categoryId", category_type as "categoryType", category from tbl_category where category_id=${updateCategory.categoryId.trim()} `,

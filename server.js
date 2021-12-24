@@ -13,6 +13,7 @@ const { graphqlHTTP } = require("express-graphql");
 const graphqlSchema = require("./app/graphql/schema");
 const graphqlResolver = require("./app/graphql/resolvers");
 const { buildSchema, print } = require('graphql');
+const http = require("http")
 const fs = require('fs');
 //const graphqlSchema = fs.readFileSync(__dirname.concat('/app/graphql/schema.graphql'), 'utf8');
 
