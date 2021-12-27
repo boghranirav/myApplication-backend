@@ -1,4 +1,3 @@
-
 module.exports = `
     type Category{
         categoryId: ID!
@@ -19,6 +18,7 @@ module.exports = `
 
     type RootQuery {
         getCategorys: [Category]
+        getCategory(categoryId: ID!): Category
     }
 
     type RootMutation {

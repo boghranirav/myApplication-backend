@@ -40,6 +40,7 @@ module.exports = function(sequelize, DataTypes) {
     sequelize,
     tableName: 'tbl_category',
     schema: 'public',
+    hasTrigger: true,
     timestamps: false,
     indexes: [
       {

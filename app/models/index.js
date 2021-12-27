@@ -44,6 +44,7 @@ global.db = {};
 //     dialect: "postgres",
 //     directory: './app/models', // where to write files
 //     port: process.env.DBPORT,
+//   //  underscored: true,
 //     caseModel: 'c', // convert snake_case column names to camelCase field names: user_id -> userId
 //     caseFile: 'c', // file names created for each model use camelCase.js not snake_case.js
 //     singularize: true, // convert plural table names to singular model names
@@ -61,6 +62,7 @@ global.db = {};
 
 // const options = {
 //   directory: "./app/models",
+//   underscored: true 
 //   //   caseFile: "l",
 //   //   caseModel: "o",
 //   //   caseProp: "c",

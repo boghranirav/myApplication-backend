@@ -10,12 +10,12 @@ const create = (model, request) => {
       if (create) {
         return resolve(create);
       } else {
-        return resolve({ message: "Something went wrong" });
+        return resolve({ message: 'Something went wrong' });
       }
     });
   } catch (error) {
     return reject({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: true,
       error_mesage: error,
     });
@@ -33,12 +33,12 @@ const findOne = (model, query) => {
       if (getData) {
         return resolve(getData);
       } else {
-        return resolve({ message: "Something went wrong" });
+        return resolve({ message: 'Something went wrong' });
       }
     });
   } catch (error) {
     return reject({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: true,
       error_mesage: error,
     });
@@ -57,12 +57,12 @@ const findByPk = (model, id) => {
       if (getData) {
         return resolve(getData);
       } else {
-        return reject({ message: "Something went wrong" });
+        return reject({ message: 'Something went wrong' });
       }
     });
   } catch (error) {
     return reject({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: true,
       error_mesage: error,
     });
@@ -81,12 +81,12 @@ const findAll = (model, query) => {
       if (getData) {
         return resolve(getData);
       } else {
-        return resolve({ message: "Record(s) not found." });
+        return resolve({ message: 'Record(s) not found.' });
       }
     });
   } catch (error) {
     return reject({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: true,
       error_mesage: error,
     });
@@ -107,15 +107,15 @@ const remove = (model, query) => {
         if (deleteData) {
           return resolve(deleteData);
         } else {
-          return reject({ message: "Something went wrong" });
+          return reject({ message: 'Something went wrong' });
         }
       } else {
-        return reject({ message: "Record(s) not found." });
+        return reject({ message: 'Record(s) not found.' });
       }
     });
   } catch (error) {
     return reject({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: true,
       error_mesage: error,
     });
@@ -136,12 +136,12 @@ const update = (model, query, updateData) => {
       if (update) {
         return resolve(update);
       } else {
-        return resolve({ message: "Something went wrong" });
+        return resolve({ message: 'Something went wrong' });
       }
     });
   } catch (error) {
     return reject({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: true,
       error_mesage: error,
     });
@@ -165,15 +165,15 @@ const findAndUpdate = (model, searchId, requestData) => {
         if (update) {
           return resolve(update);
         } else {
-          return resolve({ message: "Something went wrong while updating." });
+          return resolve({ message: 'Something went wrong while updating.' });
         }
       } else {
-        return resolve({ message: "Data not found." });
+        return resolve({ message: 'Data not found.' });
       }
     });
   } catch (error) {
     return reject({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: true,
       error_mesage: error,
     });
@@ -191,12 +191,12 @@ const bulkInsert = (model, data) => {
       if (bulkCreate) {
         return resolve(bulkCreate);
       } else {
-        return reject({ message: "Something went wrong" });
+        return reject({ message: 'Something went wrong' });
       }
     });
   } catch (error) {
     return reject({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: true,
       error_mesage: error,
     });
@@ -216,12 +216,12 @@ const findAndCountAll = (model, query, page, limit) => {
         const response = getPagingData(getData, page, limit);
         return resolve(response);
       } else {
-        return reject({ message: "Record(s) not found." });
+        return reject({ message: 'Record(s) not found.' });
       }
     });
   } catch (error) {
     return reject({
-      message: "Something went wrong",
+      message: 'Something went wrong',
       error: true,
       error_mesage: error,
     });

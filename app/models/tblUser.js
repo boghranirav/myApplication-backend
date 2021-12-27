@@ -24,11 +24,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(70),
       allowNull: true
     },
-    '2fa_status': {
+    two_fa_status: {
       type: DataTypes.BOOLEAN,
       allowNull: true
     },
-    '2fa_string': {
+    two_fa_string: {
       type: DataTypes.STRING(30),
       allowNull: true
     },
@@ -42,7 +42,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     user_type: {
       type: DataTypes.STRING(2),
-      allowNull: false
+      allowNull: true
     },
     created_at: {
       type: DataTypes.DATE,
@@ -63,6 +63,10 @@ module.exports = function(sequelize, DataTypes) {
     login_attempt: {
       type: DataTypes.SMALLINT,
       allowNull: true
+    },
+    id: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: false
     }
   }, {
     sequelize,
