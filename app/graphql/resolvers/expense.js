@@ -11,11 +11,21 @@ module.exports = {
   createNewCategory: async function ({ createCategory }, req) {
     const errors = [];
     if (validator.isEmpty(createCategory.categoryType.trim())) {
-      errors.push(RESPONSE_MSG.EXPENSE.EMPTY.CATEGORY_TYPE);
+      errors.push(RESPONSE_MSG.EXPENSE.EMPTY.CATEGORY_TYPE.MESSAGE);
     }
 
-    if (validator.isEmpty(createCategory.category.trim())) {
-      errors.push(RESPONSE_MSG.EXPENSE.EMPTY.CATEGORY);
+    if (validator.isEmpty(createCategory.categoryValue.trim())) {
+      errors.push(RESPONSE_MSG.EXPENSE.EMPTY.CATEGORY.MESSAGE);
+    }
+
+    const vOut = await dbSpFunction.countRows(
+      'tbl_category',
+      'category',
+      `${createCategory.categoryValue.trim()}`
+    );
+
+    if (vOut >= 1) {
+      errors.push(RESPONSE_MSG.EXPENSE.EXIST.MESSAGE);
     }
 
     if (errors.length > 0) {
@@ -30,17 +40,16 @@ module.exports = {
     category.set('categoryId', '0');
     category.set('userId', '1');
     category.set('categoryType', createCategory.categoryType.trim());
-    category.set('categoryValue', createCategory.category.trim());
+    category.set('categoryValue', createCategory.categoryValue.trim());
     category.set('spMode', 'ADD');
 
     const spOutput = await dbSpFunction.saveData('AddUpdateCategory', category);
 
-    const val = await dbSpFunction.displayByQuery(
-      `category_id as "categoryId", category_type as "categoryType", category`,
-      'view_all_act_category',
-      `category_id=${spOutput.categoryid}`
-    );
-    return val;
+    return {
+      categoryId: spOutput.categoryid,
+      categoryType: spOutput.categorytype,
+      categoryValue: spOutput.categoryvalue,
+    };
   },
   updateCategory: async function ({ updateCategory }, req) {
     const errors = [];
@@ -56,7 +65,7 @@ module.exports = {
       errors.push(RESPONSE_MSG.EXPENSE.EMPTY.CATEGORY_TYPE);
     }
 
-    if (validator.isEmpty(updateCategory.category.trim())) {
+    if (validator.isEmpty(updateCategory.categoryValue.trim())) {
       errors.push(RESPONSE_MSG.EXPENSE.EMPTY.CATEGORY);
     }
 
@@ -72,17 +81,16 @@ module.exports = {
     category.set('categoryId', updateCategory.categoryId.trim());
     category.set('userId', '1');
     category.set('categoryType', updateCategory.categoryType.trim());
-    category.set('categoryValue', updateCategory.category.trim());
+    category.set('categoryValue', updateCategory.categoryValue.trim());
     category.set('spMode', 'UPDATE');
 
-    await dbSpFunction.saveData('AddUpdateCategory', category);
+    const spOutput = await dbSpFunction.saveData('AddUpdateCategory', category);
 
-    const val = await dbSpFunction.displayByQuery(
-      `category_id as "categoryId", category_type as "categoryType", category`,
-      'view_all_act_category',
-      `category_id=${updateCategory.categoryId.trim()}`
-    );
-    return val;
+    return {
+      categoryId: spOutput.categoryid,
+      categoryType: spOutput.categorytype,
+      categoryValue: spOutput.categoryvalue,
+    };
   },
   deleteCategory: async function ({ categoryId }, req) {
     const errors = [];

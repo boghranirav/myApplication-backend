@@ -34,6 +34,7 @@ const saveData = async (spName, inputParam) => {
     await t.commit();
     return spOutput[0][0];
   } catch (error) {
+    console.log(error.message);
     await t.rollback();
     return reject({
       message: 'Something went wrong',
@@ -44,7 +45,6 @@ const saveData = async (spName, inputParam) => {
 };
 
 const displayByQuery = async (columns, tableName, condition) => {
-  let val;
   tableName = tableName.trim();
   condition = condition.trim();
 
@@ -53,7 +53,7 @@ const displayByQuery = async (columns, tableName, condition) => {
   }
 
   try {
-    val = await sequelize.query(
+    const val = await sequelize.query(
       `select ${columns} from ${tableName} where 0=0 ${condition}`,
       { type: QueryTypes.SELECT }
     );
@@ -74,7 +74,38 @@ const displayByQuery = async (columns, tableName, condition) => {
   }
 };
 
+const countRows = async (tableName, columnName, columnValue) => {
+  try {
+    return new Promise(async (resolve, reject) => {
+      const spOutput = await sequelize.query(
+        `SELECT countRowsCondition (:tablename, :columnname, :columnvalue)`,
+        {
+          replacements: {
+            tablename: tableName,
+            columnname: columnName,
+            columnvalue: columnValue,
+          },
+        }
+      );
+
+      if (spOutput) {
+        return resolve(parseInt(spOutput[0][0].countrowscondition));
+      } else {
+        return reject({ message: 'Something went wrong' });
+      }
+    });
+    //return spOutput;
+  } catch (error) {
+    return reject({
+      message: 'Something went wrong',
+      error: true,
+      error_mesage: error.message,
+    });
+  }
+};
+
 module.exports = {
   saveData,
   displayByQuery,
+  countRows,
 };

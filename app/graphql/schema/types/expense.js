@@ -2,18 +2,18 @@ module.exports = `
     type Category{
         categoryId: ID!
         categoryType: String!
-        category: String!
+        categoryValue: String!
     }
 
     input CreateCategory {
         categoryType: String!
-        category: String!
+        categoryValue: String!
     }
     
     input UpdateCategory {
         categoryId: ID!
         categoryType: String!
-        category: String!
+        categoryValue: String!
     }
 
     type RootQuery {
